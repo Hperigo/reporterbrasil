@@ -87,10 +87,10 @@ function ThreeScene(){
 
 		// this.controls.target.x = 3
 
-		var texture = new THREE.TextureLoader().load( "/reporterbrasil/ao.png" );
+		var texture = new THREE.TextureLoader().load( "ao.png" );
 		
 
-		var url = '/reporterbrasil/scene.json'
+		var url = 'scene.json'
 		var jsonLoader = new THREE.ObjectLoader();
 		var _scene = this.scene;
 		var _selectableObjects = this.selectableObjects;
@@ -173,7 +173,11 @@ function ThreeScene(){
 				var cameraPos = this.camera.getWorldPosition();
 				var objPos	  =  this.selectableObjects[i].object.getWorldPosition();
 
-				var alpha = (1.0 - objPos.distanceTo(cameraPos) / 35.0) * 2;
+				var alpha = ((1.0 - objPos.distanceTo(cameraPos) / 29.0) * 6);
+
+				if( alpha < 0.3 ){
+					alpha = 0.3;
+				}
 
 				var pos	= this.toScreenPosition(this.selectableObjects[i].object, this.camera);
 				this.selectableObjects[i].domObject.css({'top' : (pos.y - 50) + 'px', 'left': (pos.x) + 'px', 'opacity' : alpha });
