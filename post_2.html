@@ -1,17 +1,13 @@
 <div class="lightbox-container">
 		<!-- Begin jquery content -->
 
-
-
+		<div id='lightbox-close' class='lightbox-titleimage'>
+		</div>
 
 		<script>
 			$(function() {
 				var element = $(".lightbox-video iframe");
 				element.height( element.width() * 0.56 );
-
-				$('#lightbox-close').click( function(){					
-					closeContent();
-				} );
 
 			});	
 		</script>
@@ -19,13 +15,6 @@
 		<!-- Fotorama -->
 		<link  href="http://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet"> <!-- 3 KB -->
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script> <!-- 16 KB -->
-
-
-		<img id='lightbox-close' src="close.svg" type="image/svg+xml"></img>
-		
-
-		<div class='lightbox-titleimage'></div>
-		
 
 		<div class='lightbox-title'>Despejo na ilha de tatuoca</div>
 		<div class='lightbox-border'></div>

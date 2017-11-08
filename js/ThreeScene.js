@@ -1,5 +1,3 @@
-
-
 function SelectableObject(){
 	this.object = null;
 	this.domObject = null;
@@ -87,10 +85,10 @@ function ThreeScene(){
 
 		// this.controls.target.x = 3
 
-		var texture = new THREE.TextureLoader().load( "ao.png" );
+		var texture = new THREE.TextureLoader().load( "img1.png" );
 		
 
-		var url = 'scene.json'
+		var url = 'scene.txt'
 		var jsonLoader = new THREE.ObjectLoader();
 		var _scene = this.scene;
 		var _selectableObjects = this.selectableObjects;
