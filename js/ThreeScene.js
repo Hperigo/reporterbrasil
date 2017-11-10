@@ -119,7 +119,7 @@ function ThreeScene(){
 
 		// this.controls.target.x = 3
 
-		var texture = new THREE.TextureLoader().load( "img1.png" );
+		var texture = new THREE.TextureLoader().load( "Baked_big2.jpg" );
 		
 
 
@@ -181,36 +181,41 @@ function ThreeScene(){
 			// this.controlOrigin 
 
 			
-			// for( var i in object.children ){
-			
-			// 	var mat = new THREE.MeshBasicMaterial();
-			// 	mat.map = texture;
+			for( var i in object.children ){
+				
+				console.log( object.children[i] );
 
-			// 	var color = new THREE.Color();
-			// 	var r = Math.random();
-			// 	color.setHSL(r, 1.0, 0.5 );
-			// 	mat.color = color;
+				var mat = new THREE.MeshBasicMaterial();
 
-			// 	object.children[i].material = mat
+				if(object.children[i].name == 'big')  
+					mat.map = texture;
 
-			// 	if(i != 0 ){ // ignore floor plane
+				var color = new THREE.Color();
+				var r = Math.random();
+				color.setHSL(r, 1.0, 0.5 );
+				mat.color = color;
 
-			// 		var selectable = new SelectableObject();
+				object.children[i].material = mat
 
-			// 		selectable.setup( object.children[i], html_objects[i], i, this.setActive )
-			// 		_selectableObjects.push( selectable );
+				if(i != 0 ){ // ignore floor plane
+
+					var selectable = new SelectableObject();
+
+					selectable.setup( object.children[i], html_objects[i], i, this.setActive )
+					_selectableObjects.push( selectable );
 
 					
-			// 	}
+				}
 
-			// }// eofor
+			}// eofor
 
 			
 			console.log( _selectableObjects );
 
 			object.traverse( function( node ) {
 				if( node.material ) {
-					node.material = new THREE.MeshLambertMaterial();
+					// node.material = new THREE.MeshLambertMaterial();
+					node.material.color = new THREE.Color( 1,1,1,1 );
 					node.material.side = THREE.DoubleSide;
 				}
 			});
