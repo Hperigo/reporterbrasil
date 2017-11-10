@@ -3,18 +3,52 @@ function SelectableObject(){
 	this.domObject = null;
 	this.id = null;
 	
+
+
 	// should we update from here? 
 	this.update = function(){
 
 	}
 
-	this.setup = function( obj ){
+	this.setup = function( obj, html_info, id, onclick ){
 
-		var e = $("<div class='object-selector'>bla</div>");
-		$('li', e).attr('id','a1234');  // set the attribute 
-		$('#canvas-container').prepend(e); // put it into the DOM    
+		// var title = 
+		
+		var content = "\
+		<div class='content-description'> \
+		<img class='content-close' width=25 height=25 src='close.svg' type='image/svg+xml'></img> \
+		<div style='overflow:hidden;'> \
+		<h2>" + html_info.subtitle + " </h2>  \
+		<p> " + html_info.description + " \
+		<a href='/#" + id + "'> leia mais </a> </p>\
+		</div>\
+		</div>\
+		";
 
-		this.domObject = e
+
+		var title_el = $(
+		"\
+		<div class='object-selector'> \
+		<h1> <span class=selector-id>#" + id + "</span> " + html_info.name  + "</h1>\
+		</div>"
+		);
+			 
+
+
+		$(title_el).attr('id','selector_' + id);  // set the attribute 
+		$('#canvas-container').prepend(title_el); // put it into the DOM    
+
+		var content_el = $( content );
+
+		title_el.append( content_el );
+
+
+		title_el.click( function(){
+
+			onclick(content_el);
+		} )
+
+		this.domObject = title_el
 		this.object = obj;
 	}
 }
@@ -33,6 +67,8 @@ function ThreeScene(){
 	this.controls = null
 	
 	this.controlOrigin = null;
+	this.targetRotation = 0;
+	
 	this.selectableObjects = [];
 
 	this.init  = function ( App ){
@@ -44,9 +80,7 @@ function ThreeScene(){
 
 		window.addEventListener('resize', this.onWindowResize.bind(this), false)
 
-		$('#dummy-selector').click( function(){
 
-		} );
 
 		const width =	domElement.offsetWidth
 		const height = domElement.offsetHeight
@@ -88,16 +122,65 @@ function ThreeScene(){
 		var texture = new THREE.TextureLoader().load( "img1.png" );
 		
 
-		var url = 'scene.txt'
-		var jsonLoader = new THREE.ObjectLoader();
+
+
+
 		var _scene = this.scene;
 		var _selectableObjects = this.selectableObjects;
 		var _isInitialized = this.isInitialized;
 
 
+		var helperAxis = new THREE.AxisHelper(1);
+		this.scene.add(helperAxis);
+
+		this.controlOrigin = helperAxis;
+
+
+
+
 		function onObjectLoad( object ){
+			
+			var html_objects =
+			[	
+				{
+					name : 'Porto de Suape',
+					subtitle: 'Despejo na ilha de Tatuoca',
+					description: 'Lorem ipsum dolor sit amet, consectetuer Lorem ipsum dolor sit amet'
+				},
+				{
+					name : 'Termelétricas',
+					subtitle: 'Despejo na ilha de Tatuoca',
+					description: 'Lorem ipsum dolor sit amet, consectetuer Lorem ipsum dolor sit amet'
+				},
+				{
+					name : 'A Comunidade',
+					subtitle: 'Despejo na ilha de Tatuoca',
+					description: 'Lorem ipsum dolor sit amet, consectetuer Lorem ipsum dolor sit amet'
+				},
+				{
+					name : 'Vila Claudete',
+					subtitle: 'Despejo na ilha de Tatuoca',
+					description: 'Lorem ipsum dolor sit amet, consectetuer Lorem ipsum dolor sit amet'
+				},
+				{
+					name : 'Complexo <br> <span style="left:10px;"> Industrial </spam>',
+					subtitle: 'Despejo na ilha de Tatuoca',
+					description: 'Lorem ipsum dolor sit amet, consectetuer Lorem ipsum dolor sit amet'
+				},
+				{
+					name : 'Quilombo e ameaças',
+					subtitle: 'Despejo na ilha de Tatuoca',
+					description: 'Lorem ipsum dolor sit amet, consectetuer Lorem ipsum dolor sit amet'
+				}
+			]
+
+
+
 			object.children[0].rotateZ(Math.PI);
 
+			// this.controlOrigin 
+
+			/*
 			for( var i in object.children ){
 			
 				var mat = new THREE.MeshBasicMaterial();
@@ -112,13 +195,9 @@ function ThreeScene(){
 
 				if(i != 0 ){ // ignore floor plane
 
-
 					var selectable = new SelectableObject();
 
-					selectable.setup( object.children[i] )
-					
-					// selectable.object = 
-
+					selectable.setup( object.children[i], html_objects[i], i, this.setActive )
 					_selectableObjects.push( selectable );
 
 					
@@ -126,22 +205,27 @@ function ThreeScene(){
 
 			}// eofor
 
+			*/
 			console.log( _selectableObjects );
-			_scene.add( object );
+
+			this.controlOrigin.add(object);
+
+			// _scene.add( object );
 			this.isInitialized =  true;
 		}
 
-		jsonLoader.load(url, onObjectLoad.bind(this));
 
-		var helperAxis = new THREE.AxisHelper(1);
-		this.scene.add(helperAxis);
+		// var url = 'scene.txt'
+		// var jsonLoader = new THREE.ObjectLoader();
+		// jsonLoader.load(url, onObjectLoad.bind(this));
 
-		// const plane = new THREE.Mesh( new THREE.PlaneGeometry(100, 100, 1,1), new THREE.MeshBasicMaterial( {color:0xBBBBBB } ) );
-		// plane.rotateX( - Math.PI / 2 );
-		// plane.position.y = -0.5
-		// this.scene.add( plane )
 
-		this.controlOrigin = helperAxis;
+		var loader = new THREE.OBJLoader();
+		loader.load( 'suape_clean.obj', onObjectLoad.bind(this) )
+
+		var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+		this.scene.add( light );
+
 
 		// var cube = new THREE.Mesh( new THREE.BoxGeometry( 1, 1, 1 ) , new THREE.MeshBasicMaterial( { color: 0x00ff00 } ) );
 		// cube.position.x = 3
@@ -154,17 +238,23 @@ function ThreeScene(){
 		console.log("initized Three Js Scene-----")
 		requestAnimationFrame(this.draw.bind(this))		
 		document.getElementById('canvas-container').appendChild( this.renderer.domElement );
+
+		$('.content-description').slideUp();
+
+		$(".content-close").click( function(){
+
+			console.log( "-wewe---" );
+			// $('.content-description').css({'visibility' : 'hidden' } );
+			$('.content-description').slideUp();
+		} );
 		
 	}
 
 	this.draw = function (){
 
 
+		// update css boxes
 		if(this.isInitialized){
-
-			
-
-			console.log( );
 
 			for (var i in this.selectableObjects) {
 
@@ -177,13 +267,21 @@ function ThreeScene(){
 					alpha = 0.3;
 				}
 
+
+				var zIndex = Math.round(100*alpha);
 				var pos	= this.toScreenPosition(this.selectableObjects[i].object, this.camera);
-				this.selectableObjects[i].domObject.css({'top' : (pos.y - 50) + 'px', 'left': (pos.x) + 'px', 'opacity' : alpha });
+
+				this.selectableObjects[i].domObject.css({'top' : (pos.y - 50) + 'px', 'left': (pos.x) + 'px', 'opacity' : alpha, 'z-index': zIndex });
 				
 			}
-
 		}
 
+		// smooth animation
+		var objectRotation = this.controlOrigin.rotation.y;
+		this.controlOrigin.rotation.y += (this.targetRotation - objectRotation) * 0.1;
+
+
+		this.targetRotation  = this.targetRotation %  (Math.PI * 2.0);
 
 		this.controls.update();
 		this.renderer.render(this.scene, this.camera)
@@ -193,7 +291,25 @@ function ThreeScene(){
 	}
 
 	this.setActive = function( id ){
-		console.log("id: ", id)
+
+
+		// $('.content-description').css({'visibility' : 'hidden' } );
+		// $('.content-description').slideUp();
+		
+		var idHasClass = $(id).hasClass('active');
+		var lastObj = $('.content-description.active')[0];
+
+
+		if( lastObj != undefined ){
+			
+			$(lastObj).removeClass( "active" );
+			$(lastObj).slideUp();
+		}
+
+		if( idHasClass == false ){
+			$(id).slideDown();
+			$(id).addClass("active");
+		}
 	}
 
 	this.onItemClick = function(id){
@@ -206,6 +322,7 @@ function ThreeScene(){
 		this.camera.updateProjectionMatrix();
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
 	}
+	
 
 
 	  // THREE Js functions
