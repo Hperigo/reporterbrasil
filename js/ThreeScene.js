@@ -105,8 +105,8 @@ function ThreeScene(){
 		this.camera.position.z = -5.073035185092259
 
 		this.controls = new THREE.OrbitControls( this.camera, domElement  );
-		this.controls.maxPolarAngle = 1.394867138193868;
-		this.controls.minPolarAngle = 1.1058406140636055;
+		// this.controls.maxPolarAngle = 1.394867138193868;
+		// this.controls.minPolarAngle = 1.1058406140636055;
 
 		this.controls.enableDamping = true;
 		this.controls.dampingFactor = 0.05;
@@ -176,37 +176,45 @@ function ThreeScene(){
 
 
 
-			object.children[0].rotateZ(Math.PI);
+			// object.children[0].rotateZ(Math.PI);
 
 			// this.controlOrigin 
 
-			/*
-			for( var i in object.children ){
 			
-				var mat = new THREE.MeshBasicMaterial();
-				mat.map = texture;
+			// for( var i in object.children ){
+			
+			// 	var mat = new THREE.MeshBasicMaterial();
+			// 	mat.map = texture;
 
-				var color = new THREE.Color();
-				var r = Math.random();
-				color.setHSL(r, 1.0, 0.5 );
-				mat.color = color;
+			// 	var color = new THREE.Color();
+			// 	var r = Math.random();
+			// 	color.setHSL(r, 1.0, 0.5 );
+			// 	mat.color = color;
 
-				object.children[i].material = mat
+			// 	object.children[i].material = mat
 
-				if(i != 0 ){ // ignore floor plane
+			// 	if(i != 0 ){ // ignore floor plane
 
-					var selectable = new SelectableObject();
+			// 		var selectable = new SelectableObject();
 
-					selectable.setup( object.children[i], html_objects[i], i, this.setActive )
-					_selectableObjects.push( selectable );
+			// 		selectable.setup( object.children[i], html_objects[i], i, this.setActive )
+			// 		_selectableObjects.push( selectable );
 
 					
-				}
+			// 	}
 
-			}// eofor
+			// }// eofor
 
-			*/
+			
 			console.log( _selectableObjects );
+
+			object.traverse( function( node ) {
+				if( node.material ) {
+					node.material = new THREE.MeshLambertMaterial();
+					node.material.side = THREE.DoubleSide;
+				}
+			});
+
 
 			this.controlOrigin.add(object);
 
@@ -216,12 +224,12 @@ function ThreeScene(){
 
 
 		// var url = 'scene.txt'
-		// var jsonLoader = new THREE.ObjectLoader();
-		// jsonLoader.load(url, onObjectLoad.bind(this));
+		var jsonLoader = new THREE.ObjectLoader();
+		jsonLoader.load('suape_clean4.json', onObjectLoad.bind(this));
 
 
-		var loader = new THREE.OBJLoader();
-		loader.load( 'suape_clean.obj', onObjectLoad.bind(this) )
+		// var loader = new THREE.OBJLoader();
+		// loader.load( 'suape_clean2.obj', onObjectLoad.bind(this) )
 
 		var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
 		this.scene.add( light );
