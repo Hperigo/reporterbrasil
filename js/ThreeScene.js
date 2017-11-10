@@ -20,7 +20,7 @@ function SelectableObject(){
 		<div style='overflow:hidden;'> \
 		<h2>" + html_info.subtitle + " </h2>  \
 		<p> " + html_info.description + " \
-		<a href='/#" + id + "'> leia mais </a> </p>\
+		<a href='#" + id + "'> leia mais </a> </p>\
 		</div>\
 		</div>\
 		";
